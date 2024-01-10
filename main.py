@@ -10,13 +10,14 @@ from tensorflow.keras import layers
 import logging
 import pandas as pd
 import seaborn as sns
+from sklearn.metrics import roc_curve,confusion_matrix;
 
 config = {"num_classes": 10,
         "input_shape": [28, 28, 1],
         "learning_rate": 1e-4,
         "weight_decay": 0.0001,
         "batch_size": 64,
-        "num_epochs": 10,
+        "num_epochs": 1,
         "image_size": 28 , # We'll resize input images to this size
         "patch_size": 7, # Size of the patches to be extract from the input images
         "projection_dim": 256,
@@ -188,8 +189,10 @@ def run_experiment(model, ds_train, ds_test) -> tf.keras.callbacks.History:
 
     # --- EVALUATION ---
     model.load_weights(checkpoint_filepath)
+    
     _, accuracy = model.evaluate(ds_test)
-    print(f"Test accuracy: {round(accuracy * 100, 2)}%")
+    ot=model.predict(ds_test)
+    # print(f"Test accuracy: {round(accuracy * 100, 2)}%")
 
     return history
 
